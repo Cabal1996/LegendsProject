@@ -29,7 +29,7 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = "1Legends")
 	UCharacterStats* Stats;
 
-	//UPROPERTY(Category = 2Legend, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, Category = "1Legends")
 	UCombatComponent* Combat;
 
 };

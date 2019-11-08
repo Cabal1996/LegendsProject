@@ -15,4 +15,7 @@ class LEGENDS_API APerceptiveAIController : public AAIController
 	GENERATED_BODY()
 
 	virtual void BeginPlay() override;
+
+public:
+
 };

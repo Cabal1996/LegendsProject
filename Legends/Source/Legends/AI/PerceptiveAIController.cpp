@@ -7,5 +7,9 @@
 void APerceptiveAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (!ensure(PerceptionComponent != nullptr)) return;
 
 }
+
+
