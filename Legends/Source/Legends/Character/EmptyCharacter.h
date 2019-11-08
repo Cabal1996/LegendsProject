@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "EmptyCharacter.generated.h"
 
+class UCharacterStats;
+class UCombatComponent;
+
 UCLASS()
 class LEGENDS_API AEmptyCharacter : public ACharacter
 {
@@ -15,15 +18,18 @@ public:
 	// Sets default values for this character's properties
 	AEmptyCharacter();
 
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = "1Legends")
+	UCharacterStats* Stats;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//UPROPERTY(Category = 2Legend, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UCombatComponent* Combat;
 
 };

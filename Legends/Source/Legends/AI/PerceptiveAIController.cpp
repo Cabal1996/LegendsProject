@@ -2,3 +2,10 @@
 
 #include "PerceptiveAIController.h"
 
+#include"Perception/AIPerceptionComponent.h"
+
+void APerceptiveAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
