@@ -9,11 +9,6 @@ UCharacterStats::UCharacterStats()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-
-	MAX_health = STR * 2 + WILL;
-	currentHealth = MAX_health;
-	damage = STR + INT;
-	attackSpeed = 1000 / (1000 - AGI * 9);
 	// ...
 }
 
@@ -23,9 +18,16 @@ void UCharacterStats::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// ...
 	
 }
 
 
+// Called every frame
+void UCharacterStats::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// ...
+}
 

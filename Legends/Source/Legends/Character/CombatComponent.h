@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDamageDealt, UCombatComponent*, DamageTarget);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LEGENDS_API UCombatComponent : public UActorComponent
@@ -22,7 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 		
 };
