@@ -17,9 +17,14 @@ UCombatComponent::UCombatComponent()
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// ...
 	
+}
+
+void UCombatComponent::Init(UCharacterStats* OwnerStats)
+{
+
 }
 
 

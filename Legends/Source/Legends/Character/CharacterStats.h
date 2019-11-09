@@ -15,13 +15,12 @@ public:
 	// Sets default values for this component's properties
 	UCharacterStats();
 
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:
-
-	float currentHealth;
 
 	int LUCK{ 5 };
 	int STR{ 5 };
@@ -29,6 +28,10 @@ private:
 	int PER{ 5 };
 	int WILL{ 5 };
 	int INT{ 5 };
+
+public:
+
+	float currentHealth;
 
 	float MAX_health;
 	float damage;

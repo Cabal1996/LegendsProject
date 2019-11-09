@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
+class UCharacterStats;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDamageDealt, UCombatComponent*, DamageTarget);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -17,12 +19,15 @@ public:
 	// Sets default values for this component's properties
 	UCombatComponent();
 
+	void Init(UCharacterStats* OwnerStats);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:	
 	
+private:
+
+	UCharacterStats* OwnerStats;
 
 		
 };
