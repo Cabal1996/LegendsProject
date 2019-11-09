@@ -20,6 +20,12 @@ void APerceptiveAIController::Possess(APawn * InPawn)
 	Super::Possess(InPawn);
 
 	Stats = Cast<UCharacterStats>(InPawn->GetComponentByClass(UCharacterStats::StaticClass()));
+	if (!ensure(Stats != nullptr)) return;
+
+	sightConfig->SightRadius = Stats->viewDistance;
+	sightConfig->LoseSightRadius = (Stats->viewDistance)+25;
+	sightConfig->PeripheralVisionAngleDegrees = Stats->viewAngle;
+	PerceptionComponent->ConfigureSense(*sightConfig);
 }
 
 APerceptiveAIController::APerceptiveAIController()
@@ -37,11 +43,6 @@ APerceptiveAIController::APerceptiveAIController()
 	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
-
-	sightConfig->SightRadius = 300;//TODO use stats possessedUnit->sightRange;
-	sightConfig->LoseSightRadius = 300;//TODO stats
-	sightConfig->PeripheralVisionAngleDegrees = 360.0f;//TODO stats
-	PerceptionComponent->ConfigureSense(*sightConfig);
 }
 
 
