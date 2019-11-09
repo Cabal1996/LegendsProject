@@ -2,7 +2,12 @@
 
 #include "PerceptiveAIController.h"
 
-#include"Perception/AIPerceptionComponent.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+
+#include "Character/CharacterStats.h"
+
+
 
 void APerceptiveAIController::BeginPlay()
 {
@@ -14,7 +19,7 @@ void APerceptiveAIController::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
-
+	Stats = Cast<UCharacterStats>(InPawn->GetComponentByClass(UCharacterStats::StaticClass()));
 }
 
 APerceptiveAIController::APerceptiveAIController()

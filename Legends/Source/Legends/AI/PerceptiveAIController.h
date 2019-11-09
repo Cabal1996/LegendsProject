@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 
-#include "Perception/AISenseConfig_Sight.h"
-
 #include "PerceptiveAIController.generated.h"
 
 
+class UAISenseConfig_Sight;
+class UCharacterStats;
 /**
  * 
  */
@@ -28,6 +28,8 @@ public:
 	UAISenseConfig_Sight *sightConfig;
 
 	UAIPerceptionComponent *PerceptionComponent;
+	UCharacterStats* Stats;
+
 
 	TArray<AActor*> enemies;
 	UFUNCTION()
