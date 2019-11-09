@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "CharacterStats.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LEGENDS_API UCharacterStats : public UActorComponent
 {
@@ -20,9 +19,27 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
+
+	float currentHealth;
+
+	int LUCK{ 5 };
+	int STR{ 5 };
+	int AGI{ 5 };
+	int PER{ 5 };
+	int WILL{ 5 };
+	int INT{ 5 };
+
+	float MAX_health;
+	float damage;
+	float attackSpeed;
+
+	float moveSpeed;
+	float turnSpeed;
+
+	float viewDistance;
+	float viewAngle;
+	
 
 		
 };
