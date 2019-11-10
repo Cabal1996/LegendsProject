@@ -4,15 +4,48 @@
 
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Character/CharacterStats.h"
 
-
-
-void APerceptiveAIController::BeginPlay()
+APerceptiveAIController::APerceptiveAIController()
 {
-	Super::BeginPlay();
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception Component"));
+	if (!ensure(PerceptionComponent != nullptr)) return;
+
+	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	if (!ensure(sightConfig != nullptr)) return;
+
+	PerceptionComponent->ConfigureSense(*sightConfig);
+	PerceptionComponent->SetDominantSense(sightConfig->GetSenseImplementation());
+	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &APerceptiveAIController::SenseStuff);
+	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	
+}
+
+void APerceptiveAIController::SenseStuff(const TArray<AActor*>& Actors)
+{
+	TArray<AActor*> PersivedActors;
+	PerceptionComponent->GetPerceivedActors(sightConfig->GetSenseImplementation(), PersivedActors);
+	enemies.Empty();
+	for (AActor* Actor : PersivedActors)
+	{
+		if (!Actor || !Actor->FindComponentByClass<UCharacterStats>()) continue;
+		for (const FName &Tag : GetPawn()->Tags)
+		{
+			if (!Actor->ActorHasTag(Tag))
+			{
+				enemies.AddUnique(Actor);
+			}
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("I See %i Actors and %i enemies"), PersivedActors.Num(), enemies.Num())
+	
+	//
+	if(!Blackboard) return;
+	Blackboard->SetValueAsBool(TEXT("SeeEnemys"), enemies.Num() != 0);
 }
 
 void APerceptiveAIController::Possess(APawn * InPawn)
@@ -28,42 +61,13 @@ void APerceptiveAIController::Possess(APawn * InPawn)
 	PerceptionComponent->ConfigureSense(*sightConfig);
 }
 
-APerceptiveAIController::APerceptiveAIController()
+void APerceptiveAIController::UnPossess()
 {
+	Super::UnPossess();
 
-	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception Component"));
-	if (!ensure(PerceptionComponent != nullptr)) return;
-
-	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
-	if (!ensure(sightConfig != nullptr)) return;
-
-	PerceptionComponent->ConfigureSense(*sightConfig);
-	PerceptionComponent->SetDominantSense(sightConfig->GetSenseImplementation());
-	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &APerceptiveAIController::SenseStuff);
-	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	PerceptionComponent->bIsActive = false;
 }
 
-
-void APerceptiveAIController::SenseStuff(const TArray<AActor*>& Actors)
-{
-	TArray<AActor*> PersivedActors;
-	PerceptionComponent->GetPerceivedActors(sightConfig->GetSenseImplementation(), PersivedActors);
-	enemies.Empty();
-	for (AActor* Actor : PersivedActors)
-	{
-		if (!Actor || Actor==GetPawn()) continue;
-		for (const FName &Tag : GetPawn()->Tags)
-		{
-			if (!Actor->ActorHasTag(Tag))
-			{
-				enemies.AddUnique(Actor);
-			}
-		}
-	}
-	UE_LOG(LogTemp, Warning, TEXT("I See %i Actors and %i enemies"), PersivedActors.Num(), enemies.Num())
-}
 
 
 

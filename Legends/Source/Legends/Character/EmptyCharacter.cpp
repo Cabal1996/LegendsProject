@@ -16,6 +16,23 @@ AEmptyCharacter::AEmptyCharacter()
 
 	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
 	if (!ensure(Combat != nullptr)) return;
+	Combat->Init(Stats);
+	Combat->TimeToDie.AddDynamic(this, &AEmptyCharacter::Death);
+}
+
+void AEmptyCharacter::ApplyDamage()
+{
+	Combat->ApplyDamage();
+}
+
+void AEmptyCharacter::Death_Implementation()
+{
+	DetachFromControllerPendingDestroy();
+}
+
+void AEmptyCharacter::SetAttackTarget(AEmptyCharacter * TargetCahracter)
+{
+	Combat = TargetCahracter->Combat;
 }
 
 // Called when the game starts or when spawned

@@ -25,14 +25,6 @@ UCharacterStats::UCharacterStats()
 }
 
 
-// Called when the game starts
-void UCharacterStats::BeginPlay()
-{
-	Super::BeginPlay();
-
-	
-}
-
 
 
 

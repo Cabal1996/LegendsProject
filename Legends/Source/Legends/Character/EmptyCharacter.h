@@ -18,7 +18,14 @@ public:
 	// Sets default values for this character's properties
 	AEmptyCharacter();
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ApplyDamage();
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Combat")
+	void Death();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetAttackTarget(AEmptyCharacter* TargetCahracter);
 
 protected:
 	// Called when the game starts or when spawned

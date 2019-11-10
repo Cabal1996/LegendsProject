@@ -15,19 +15,24 @@ public:
 	// Sets default values for this component's properties
 	UCharacterStats();
 
+
+
 	
+
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-private:
-
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int LUCK{ 5 };
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int STR{ 5 };
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int AGI{ 5 };
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int PER{ 5 };
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int WILL{ 5 };
+	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int INT{ 5 };
+	
 
 public:
 

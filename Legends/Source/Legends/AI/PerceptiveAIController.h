@@ -18,20 +18,24 @@ class LEGENDS_API APerceptiveAIController : public AAIController
 {
 	GENERATED_BODY()
 
-	virtual void BeginPlay() override;
-	
-	virtual void Possess(APawn* InPawn) override;
-
 public:
 	APerceptiveAIController();
 
-	UAISenseConfig_Sight *sightConfig;
+	UFUNCTION(BlueprintPure, Category = "Perception")
+	TArray<AActor*> GetEnemysInSightRange() const { return enemies; };
 
+	UFUNCTION()
+	void SenseStuff(const TArray<AActor*>& Actors);
+
+private:
+
+	UAISenseConfig_Sight *sightConfig;
 	UAIPerceptionComponent *PerceptionComponent;
 	UCharacterStats* Stats;
 
-
 	TArray<AActor*> enemies;
-	UFUNCTION()
-	void SenseStuff(const TArray<AActor*>& Actors);
+	
+
+	virtual void Possess(APawn* InPawn) override;
+	virtual void UnPossess() override;
 };
