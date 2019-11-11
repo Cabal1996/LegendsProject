@@ -45,9 +45,15 @@ TArray<AActor*> APerceptiveAIController::GetEnemysInSightRange()
 
 		//
 	if (!Blackboard) return enemies;
-	Blackboard->SetValueAsBool(TEXT("SeeEnemys"), enemies.Num() != 0);
-
-
+	if (enemies.Num() != 0)
+	{
+		Blackboard->SetValueAsBool(TEXT("SeeEnemys"), true);
+	}
+	else
+	{
+		Blackboard->ClearValue(TEXT("SeeEnemys"));
+	}
+	
 
 	return enemies;
 }
@@ -81,14 +87,19 @@ AActor * APerceptiveAIController::GetClosestEnemy()
 
 void APerceptiveAIController::SeeEnemy(const TArray<AActor*>& others)
 {
+	if (!Blackboard) return;
 	for (AActor* Other : others)
 	{
+		
 		if (!Other) continue;
+		if (!Other->FindComponentByClass<UCharacterStats>()) continue;
+		if (Other->ActorHasTag(TEXT("Corp"))) continue;
 		for (const FName &Tag : ControlledPawn->Tags)
 		{
-			if(Other->ActorHasTag(TEXT("Corp"))) continue;
-			if (!Blackboard) return;
-			Blackboard->SetValueAsBool(TEXT("SeeEnemys"), !Other->ActorHasTag(Tag));
+			if (!Other->ActorHasTag(Tag))
+			{
+				Blackboard->SetValueAsBool(TEXT("SeeEnemys"), true);
+			}
 		}
 	}
 }
@@ -115,8 +126,3 @@ void APerceptiveAIController::UnPossess()
 	ControlledPawn = nullptr;
 	PerceptionComponent->bIsActive = false;
 }
-
-
-
-
-
