@@ -24,6 +24,15 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Perception")
 	TArray<AActor*> GetEnemysInSightRange();
 
+	UFUNCTION(BlueprintPure, Category = "Perception")
+	AActor* GetClosestEnemy();
+
+	UFUNCTION()
+	void SeeEnemy(const TArray<AActor*>& others);
+
+protected:
+	AActor* ControlledPawn = nullptr;
+
 private:
 
 	UAISenseConfig_Sight *sightConfig;

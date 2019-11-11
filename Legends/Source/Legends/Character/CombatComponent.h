@@ -39,6 +39,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	bool ResiveDamage(float damageTo);
+
 private:
 
 	UCharacterStats* OwnerStats;

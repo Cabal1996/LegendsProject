@@ -27,12 +27,14 @@ APerceptiveAIController::APerceptiveAIController()
 TArray<AActor*> APerceptiveAIController::GetEnemysInSightRange()
 {
 	TArray<AActor*> PersivedActors;
+	
 	PerceptionComponent->GetPerceivedActors(sightConfig->GetSenseImplementation(), PersivedActors);
 	enemies.Empty();
+	if (!ControlledPawn) return enemies;
 	for (AActor* Actor : PersivedActors)
 	{
 		if (!Actor || Actor->ActorHasTag(TEXT("Corp")) || !Actor->FindComponentByClass<UCharacterStats>()) continue;
-		for (const FName &Tag : GetPawn()->Tags)
+		for (const FName &Tag : ControlledPawn->Tags)
 		{
 			if (!Actor->ActorHasTag(Tag))
 			{
@@ -46,13 +48,57 @@ TArray<AActor*> APerceptiveAIController::GetEnemysInSightRange()
 	Blackboard->SetValueAsBool(TEXT("SeeEnemys"), enemies.Num() != 0);
 
 
+
 	return enemies;
+}
+
+AActor * APerceptiveAIController::GetClosestEnemy()
+{
+	AActor* ClosestEnemy = nullptr;
+	if (!ControlledPawn) return ClosestEnemy;
+	GetEnemysInSightRange();
+	if (enemies.Num() == 0) return ClosestEnemy;
+	
+	for (int i = 0; i < enemies.Num(); i++)
+	{
+		if (!enemies[i]) continue;
+		if (!ClosestEnemy)
+		{
+			ClosestEnemy = enemies[i];
+			continue;
+		}
+
+		if (
+			(ControlledPawn->GetActorLocation() - ClosestEnemy->GetActorLocation()).Size()
+			/*------------------------------->*/>
+			(ControlledPawn->GetActorLocation() - enemies[i]->GetActorLocation()).Size()
+			)
+			ClosestEnemy = enemies[i];
+	}
+
+	return ClosestEnemy;
+}
+
+void APerceptiveAIController::SeeEnemy(const TArray<AActor*>& others)
+{
+	for (AActor* Other : others)
+	{
+		if (!Other) continue;
+		for (const FName &Tag : ControlledPawn->Tags)
+		{
+			if(Other->ActorHasTag(TEXT("Corp"))) continue;
+			if (!Blackboard) return;
+			Blackboard->SetValueAsBool(TEXT("SeeEnemys"), !Other->ActorHasTag(Tag));
+		}
+	}
 }
 
 void APerceptiveAIController::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
+	if (!InPawn) return;
+	ControlledPawn = InPawn;
 	Stats = Cast<UCharacterStats>(InPawn->GetComponentByClass(UCharacterStats::StaticClass()));
 	if (!ensure(Stats != nullptr)) return;
 
@@ -60,12 +106,13 @@ void APerceptiveAIController::Possess(APawn * InPawn)
 	sightConfig->LoseSightRadius = (Stats->viewDistance)+25;
 	sightConfig->PeripheralVisionAngleDegrees = Stats->viewAngle;
 	PerceptionComponent->ConfigureSense(*sightConfig);
+	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &APerceptiveAIController::SeeEnemy);
 }
 
 void APerceptiveAIController::UnPossess()
 {
 	Super::UnPossess();
-
+	ControlledPawn = nullptr;
 	PerceptionComponent->bIsActive = false;
 }
 
