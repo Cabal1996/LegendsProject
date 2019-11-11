@@ -2,6 +2,7 @@
 
 #include "CombatComponent.h"
 #include "Character/CharacterStats.h"
+#include "GameFramework/Actor.h"
 
 
 
@@ -34,24 +35,42 @@ void UCombatComponent::ApplyDamage()
 {
 	if (!ensure(OwnerStats != nullptr)) return;
 	if (!CombatTarget) return;
-
-	CombatTarget->ResiveDamage(OwnerStats->damage);
+	
+	if (!CombatTarget->ResiveDamage(OwnerStats->damage))
+		CombatTarget = nullptr;
 }
 
-void UCombatComponent::ResiveDamage(float damageTo)
+bool UCombatComponent::ResiveDamage(float damageTo)
 {	
-	if (!ensure(OwnerStats != nullptr)) return;
-	OwnerStats->currentHealth = FMath::Clamp(CombatTarget->OwnerStats->currentHealth - damageTo, 0.f, BIG_NUMBER);
+	if (!ensure(OwnerStats != nullptr)) return false;
+
+	OwnerStats->currentHealth = FMath::Clamp(OwnerStats->currentHealth - damageTo, 0.f, BIG_NUMBER);
+	OnDamageRecive.Broadcast();
 
 	if (OwnerStats->currentHealth <= 0)
 	{
 		TimeToDie.Broadcast();
+		return false;
 	}
+
+	return true;
 }
 
 void UCombatComponent::SetCombatTarget(UCombatComponent* TargetToSet)
 {
 	CombatTarget = TargetToSet;
+}
+
+bool UCombatComponent::IsInAttackRange()
+{
+	if (!ensure(OwnerStats != nullptr)) return false;
+	if (!CombatTarget)
+	{
+		return false;
+	}
+	float f = (GetOwner()->GetActorLocation() - CombatTarget->GetOwner()->GetActorLocation()).Size();
+	UE_LOG(LogTemp, Warning, TEXT("%f cm to enemy"), f)
+	return OwnerStats->attackRange > f;
 }
 
 

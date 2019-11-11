@@ -13,9 +13,9 @@ AEmptyCharacter::AEmptyCharacter()
 
 	Stats = CreateDefaultSubobject<UCharacterStats>("Stats");
 	if (!ensure(Stats != nullptr)) return;
-
 	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
 	if (!ensure(Combat != nullptr)) return;
+
 	Combat->Init(Stats);
 	Combat->TimeToDie.AddDynamic(this, &AEmptyCharacter::Death);
 }
@@ -25,20 +25,37 @@ void AEmptyCharacter::ApplyDamage()
 	Combat->ApplyDamage();
 }
 
-void AEmptyCharacter::Death_Implementation()
+void AEmptyCharacter::Death()
 {
-	DetachFromControllerPendingDestroy();
-}
-
-void AEmptyCharacter::SetAttackTarget(AEmptyCharacter * TargetCahracter)
-{
-	Combat = TargetCahracter->Combat;
-}
-
-// Called when the game starts or when spawned
-void AEmptyCharacter::BeginPlay()
-{
-	Super::BeginPlay();
+	bIsDead = true;
 	
+	DetachFromControllerPendingDestroy();
+
+	Stats->DestroyComponent();
+	Combat->DestroyComponent();
+}
+
+void AEmptyCharacter::SetAttackTarget(AEmptyCharacter* TargetCharacter)
+{
+	if (!TargetCharacter)
+	{
+		Combat->SetCombatTarget(nullptr);
+	}
+	else
+	{
+		Combat->SetCombatTarget(TargetCharacter->Combat);
+	}
+	
+}
+
+bool AEmptyCharacter::CanAttack()
+{
+	return Combat->IsInAttackRange();
+}
+
+float AEmptyCharacter::GetCurrentHP()
+{
+	if (Stats->currentHealth <= 0) return 0.f;
+	return Stats->currentHealth/Stats->MAX_health;
 }
 

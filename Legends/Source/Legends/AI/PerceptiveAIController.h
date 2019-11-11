@@ -22,10 +22,7 @@ public:
 	APerceptiveAIController();
 
 	UFUNCTION(BlueprintPure, Category = "Perception")
-	TArray<AActor*> GetEnemysInSightRange() const { return enemies; };
-
-	UFUNCTION()
-	void SenseStuff(const TArray<AActor*>& Actors);
+	TArray<AActor*> GetEnemysInSightRange();
 
 private:
 

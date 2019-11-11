@@ -21,22 +21,26 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ApplyDamage();
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Combat")
-	void Death();
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetAttackTarget(AEmptyCharacter* TargetCharacter);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void SetAttackTarget(AEmptyCharacter* TargetCahracter);
+	bool CanAttack();	
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	float GetCurrentHP();
 
-public:	
+	UFUNCTION()
+	void Death();
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "1Legends")
 	UCharacterStats* Stats;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "1Legends")
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "1Legends")
 	UCombatComponent* Combat;
 
+private:
+	bool bIsDead = false;
+
+	
 };

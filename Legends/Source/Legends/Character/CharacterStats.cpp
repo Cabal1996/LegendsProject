@@ -21,7 +21,7 @@ UCharacterStats::UCharacterStats()
 	viewDistance = 400 + PER * 100;
 	viewAngle = FMath::Clamp((60.f + 3 * ((PER*PER) / 100)), 0.f, 360.f);
 
-
+	attackRange = 300; // TODO Weapon
 }
 
 

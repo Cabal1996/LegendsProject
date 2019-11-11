@@ -15,10 +15,6 @@ public:
 	// Sets default values for this component's properties
 	UCharacterStats();
 
-
-
-	
-
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Implicit")
 	int LUCK{ 5 };
@@ -41,6 +37,7 @@ public:
 	float MAX_health;
 	float damage;
 	float attackSpeed;
+	float attackRange; //TODO make Weapons
 
 	float moveSpeed;
 	float turnSpeed;

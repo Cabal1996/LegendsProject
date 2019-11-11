@@ -9,6 +9,7 @@
 class UCharacterStats;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMortalCall);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetHit);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LEGENDS_API UCombatComponent : public UActorComponent
@@ -24,12 +25,20 @@ public:
 	void ApplyDamage();
 	void SetCombatTarget(UCombatComponent* TargetToSet);
 
+	bool IsInAttackRange();
+
+	bool HaveTarget() { return CombatTarget != nullptr; };
+
+	//UPROPERTY(BlueprintAssignable)
 	FMortalCall TimeToDie;
+
+	UPROPERTY(BlueprintAssignable)
+	FGetHit OnDamageRecive;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	void ResiveDamage(float damageTo);
+	bool ResiveDamage(float damageTo);
 private:
 
 	UCharacterStats* OwnerStats;
