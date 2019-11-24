@@ -7,7 +7,7 @@ UCharacterStats::UCharacterStats()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 
 	MAX_health = STR * 2 + WILL;
@@ -21,7 +21,6 @@ UCharacterStats::UCharacterStats()
 	viewDistance = 400 + PER * 100;
 	viewAngle = FMath::Clamp((60.f + 3 * ((PER*PER) / 100)), 0.f, 360.f);
 
-	attackRange = 300; // TODO Weapon
 }
 
 

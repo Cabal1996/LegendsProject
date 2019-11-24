@@ -38,6 +38,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "1Legends")
 	UCombatComponent* Combat;
+	
+	void ApplyBuff(UObject* buff);
 
 private:
 	bool bIsDead = false;

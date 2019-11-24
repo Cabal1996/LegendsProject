@@ -54,11 +54,10 @@ TArray<AActor*> APerceptiveAIController::GetEnemysInSightRange()
 		Blackboard->ClearValue(TEXT("SeeEnemys"));
 	}
 	
-
 	return enemies;
 }
 
-AActor * APerceptiveAIController::GetClosestEnemy()
+AActor* APerceptiveAIController::GetClosestEnemy()
 {
 	AActor* ClosestEnemy = nullptr;
 	if (!ControlledPawn) return ClosestEnemy;

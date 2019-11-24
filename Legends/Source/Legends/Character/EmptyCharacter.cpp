@@ -9,7 +9,7 @@
 AEmptyCharacter::AEmptyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	Stats = CreateDefaultSubobject<UCharacterStats>("Stats");
 	if (!ensure(Stats != nullptr)) return;
@@ -57,5 +57,10 @@ float AEmptyCharacter::GetCurrentHP()
 {
 	if (Stats->currentHealth <= 0) return 0.f;
 	return Stats->currentHealth/Stats->MAX_health;
+}
+
+void AEmptyCharacter::ApplyBuff(UObject* buff)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Buff applied to %s"), *GetName())
 }
 

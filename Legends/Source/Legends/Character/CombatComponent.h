@@ -22,9 +22,13 @@ public:
 
 	void Init(UCharacterStats* OwnerStats);
 	
+	UFUNCTION()
 	void ApplyDamage();
-	void SetCombatTarget(UCombatComponent* TargetToSet);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SpawnProjectile(FTransform SpawnAt, TSubclassOf<AActor> ProjectileType);
+
+	void SetCombatTarget(UCombatComponent* TargetToSet);
 	bool IsInAttackRange();
 
 	bool HaveTarget() { return CombatTarget != nullptr; };
@@ -39,6 +43,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	bool ResiveDamage(float damageTo);
+
+	UPROPERTY(EditDefaultsOnly, Category = "1Legends")
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 private:
 

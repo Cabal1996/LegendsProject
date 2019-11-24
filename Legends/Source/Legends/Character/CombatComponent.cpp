@@ -3,6 +3,8 @@
 #include "CombatComponent.h"
 #include "Character/CharacterStats.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
+#include "Character/Weapon/Projectile.h"
 
 
 
@@ -11,7 +13,7 @@ UCombatComponent::UCombatComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -29,6 +31,7 @@ void UCombatComponent::BeginPlay()
 void UCombatComponent::Init(UCharacterStats* OwnerStats)
 {
 	this->OwnerStats = OwnerStats;
+	
 }
 
 void UCombatComponent::ApplyDamage()
@@ -38,6 +41,25 @@ void UCombatComponent::ApplyDamage()
 	
 	if (!CombatTarget->ResiveDamage(OwnerStats->damage))
 		CombatTarget = nullptr;
+}
+
+void UCombatComponent::SpawnProjectile(FTransform SpawnAt, TSubclassOf<AActor> ProjectileType)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s "), *SpawnAt.ToString())
+
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
+	if (!ensure(ProjectileClass != nullptr)) return;
+	FActorSpawnParameters Param;
+	Param.Instigator = Cast<APawn>(GetOwner());
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AProjectile* Projectile = World->SpawnActor<AProjectile>(
+		ProjectileClass, SpawnAt, Param
+	);
+	if (!ensure(Projectile != nullptr)) return;
+	Projectile->OnProjectileHit.AddDynamic(this, &UCombatComponent::ApplyDamage);
+	Projectile->LaunchHomming(CombatTarget->GetOwner()->GetRootComponent());
+
 }
 
 bool UCombatComponent::ResiveDamage(float damageTo)
@@ -68,10 +90,8 @@ bool UCombatComponent::IsInAttackRange()
 	{
 		return false;
 	}
-	float f = (GetOwner()->GetActorLocation() - CombatTarget->GetOwner()->GetActorLocation()).Size();
-	UE_LOG(LogTemp, Warning, TEXT("%f cm to enemy"), f)
-	return OwnerStats->attackRange > f;
+
+	float distanceToTarget = (GetOwner()->GetActorLocation() - CombatTarget->GetOwner()->GetActorLocation()).Size();
+	//UE_LOG(LogTemp, Warning, TEXT("Range: %f || Limit: %f"), distanceToTarget, OwnerStats->attackRange)
+	return OwnerStats->attackRange > distanceToTarget;
 }
-
-
-

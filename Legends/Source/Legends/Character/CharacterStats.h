@@ -37,7 +37,9 @@ public:
 	float MAX_health;
 	float damage;
 	float attackSpeed;
-	float attackRange; //TODO make Weapons
+
+	UPROPERTY(EditAnywhere, Category = "Stats")
+	float attackRange { 300 }; //TODO make Weapons
 
 	float moveSpeed;
 	float turnSpeed;
